@@ -2,7 +2,6 @@ defmodule AOC.Day6 do
   def part_1(args) do
     args
     |> prep_input()
-    |> initial_fish_count_map()
     |> simulate_days(80)
     |> count_fish()
   end
@@ -10,61 +9,28 @@ defmodule AOC.Day6 do
   def part_2(args) do
     args
     |> prep_input()
-    |> initial_fish_count_map()
     |> simulate_days(256)
     |> count_fish()
   end
 
-  def initial_fish_count_map(starting_fish) do
-    fish_counts = %{
-      0 => 0,
-      1 => 0,
-      2 => 0,
-      3 => 0,
-      4 => 0,
-      5 => 0,
-      6 => 0,
-      7 => 0,
-      8 => 0,
-      "prev" => 0
-    }
-
-    Enum.reduce(starting_fish, fish_counts, fn x, acc ->
-      {_, updated_fish_counts} =
-        Map.get_and_update(acc, x, fn current_value ->
-          if current_value > 0 do
-            {current_value, current_value + 1}
-          else
-            {current_value, 1}
-          end
-        end)
-
-      updated_fish_counts
-    end)
-  end
+  def simulate_days(fish_map, 0), do: fish_map
 
   def simulate_days(fish_map, days) do
-    if days == 0 do
-      fish_map
-    else
-      fish_map |> simulate_day() |> simulate_days(days - 1)
-    end
+    fish_map |> simulate_day() |> simulate_days(days - 1)
   end
 
   def simulate_day(fish_map) do
-    Enum.reduce(8..0, fish_map, fn x, acc ->
-      case x do
-        8 ->
-          %{acc | "prev" => acc[8], 8 => 0}
-
-        0 ->
-          %{acc | 8 => acc[0], 6 => acc[6] + acc[0], 0 => acc["prev"]}
-
-        _ ->
-          new_val = acc["prev"]
-          %{acc | "prev" => acc[x], x => new_val}
-      end
-    end)
+    %{
+      0 => Map.get(fish_map, 1, 0),
+      1 => Map.get(fish_map, 2, 0),
+      2 => Map.get(fish_map, 3, 0),
+      3 => Map.get(fish_map, 4, 0),
+      4 => Map.get(fish_map, 5, 0),
+      5 => Map.get(fish_map, 6, 0),
+      6 => Map.get(fish_map, 7, 0) + Map.get(fish_map, 0, 0),
+      7 => Map.get(fish_map, 8, 0),
+      8 => Map.get(fish_map, 0, 0)
+    }
   end
 
   def count_fish(fish_map) do
@@ -78,5 +44,6 @@ defmodule AOC.Day6 do
     args
     |> String.split(",", trim: true)
     |> Enum.map(&String.to_integer/1)
+    |> Enum.frequencies()
   end
 end
