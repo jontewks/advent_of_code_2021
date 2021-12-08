@@ -2,35 +2,18 @@ defmodule AOC.Day5 do
   def part_1(args) do
     args
     |> prep_input()
-    |> generate_map()
+    |> generate_map(ignore_diags: true)
     |> calculate_danger()
   end
 
   def part_2(args) do
     args
     |> prep_input()
-    |> generate_map_with_diag()
+    |> generate_map()
     |> calculate_danger()
   end
 
-  def generate_map([coords | remaining_coords], map \\ %{}) do
-    [[x1, y1], [x2, y2]] = coords
-
-    updated_map =
-      cond do
-        x1 == x2 -> update_map_values(x1, [y1, y2], map)
-        y1 == y2 -> update_map_values([x1, x2], y1, map)
-        true -> map
-      end
-
-    if !Enum.empty?(remaining_coords) do
-      generate_map(remaining_coords, updated_map)
-    else
-      updated_map
-    end
-  end
-
-  def generate_map_with_diag([coords | remaining_coords], map \\ %{}) do
+  def generate_map([coords | remaining_coords], opts \\ [], map \\ %{}) do
     [[x1, y1], [x2, y2]] = coords
 
     updated_map =
@@ -42,12 +25,16 @@ defmodule AOC.Day5 do
           update_map_values([x1, x2], y1, map)
 
         true ->
-          range = Enum.zip_with([x1..x2, y1..y2], & &1)
-          update_map_values(range, map)
+          if Keyword.get(opts, :ignore_diags) do
+            map
+          else
+            range = Enum.zip_with([x1..x2, y1..y2], & &1)
+            update_map_values(range, map)
+          end
       end
 
     if !Enum.empty?(remaining_coords) do
-      generate_map_with_diag(remaining_coords, updated_map)
+      generate_map(remaining_coords, opts, updated_map)
     else
       updated_map
     end
