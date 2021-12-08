@@ -35,7 +35,6 @@ defmodule AOC.Day6 do
 
   def count_fish(fish_map) do
     fish_map
-    |> Map.delete("prev")
     |> Map.values()
     |> Enum.sum()
   end
