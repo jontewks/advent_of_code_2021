@@ -1,14 +1,13 @@
-defmodule AOC.Day4Test do
+defmodule AOC.Day3Test do
   use ExUnit.Case
 
-  import AOC.Day4
+  import AOC.Day3
 
   test "part 1 - example" do
-    input = File.read!("input/4_example.txt")
+    input = File.read!("input/3_example.txt")
     assert part_1(input) == 198
   end
 
-  @tag :skip
   test "part 1" do
     input = File.read!("input/3.txt")
     assert part_1(input) == 3_985_686
@@ -22,7 +21,7 @@ defmodule AOC.Day4Test do
 
   @tag :skip
   test "part 2" do
-    input = File.read!("input/2.txt")
+    input = File.read!("input/3.txt")
     assert part_2(input) == 2_015_547_716
   end
 end
