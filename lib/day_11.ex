@@ -126,17 +126,15 @@ defmodule AOC.Day11 do
     {updated_matrix, flash_count}
   end
 
-  def find_first_simultaneous_flash(matrix) do
-    Enum.reduce_while(0..1000, matrix, fn i, acc ->
-      {updated_matrix, flashes} = step(acc)
-      total_octopi = matrix |> List.flatten() |> length()
+  def find_first_simultaneous_flash(matrix, step \\ 1) do
+    {updated_matrix, flashes} = step(matrix)
+    total_octopi = matrix |> List.flatten() |> length()
 
-      if total_octopi == flashes do
-        {:halt, i + 1}
-      else
-        {:cont, updated_matrix}
-      end
-    end)
+    if total_octopi == flashes do
+      step
+    else
+      find_first_simultaneous_flash(updated_matrix, step + 1)
+    end
   end
 
   def prep_input(args) do
