@@ -113,6 +113,9 @@ defmodule AOC.Day13 do
   end
 
   def pretty_print(matrix) do
+    # Adds line break between the output and the test status dots
+    IO.puts("")
+
     Enum.each(matrix, fn row ->
       row
       |> Enum.map(fn item ->
@@ -122,7 +125,8 @@ defmodule AOC.Day13 do
           "X"
         end
       end)
-      |> IO.inspect()
+      |> Enum.join()
+      |> IO.inspect(width: :infinity)
     end)
   end
 
